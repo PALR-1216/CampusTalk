@@ -31,12 +31,6 @@ struct NewListView: View {
             
             HStack {
                 
-                
-                    Image(systemName: "person.circle.fill")
-                        .font(.largeTitle)
-                        .padding(.leading, 5)
-                        
-                
                 Text("@Senpai")
                     .font(.callout)
                 Text("-")
@@ -90,7 +84,8 @@ struct NewListView: View {
             
             HStack {
                 Text(Message)
-                    .padding(.leading, 25)
+                    .padding()
+
                 Spacer()
             }
             
@@ -111,7 +106,7 @@ struct NewListView: View {
                     
                 }
 //                .padding(.horizontal,50)
-                Spacer()
+                
                 
                 Button {
                     
@@ -126,12 +121,13 @@ struct NewListView: View {
                 
 
 
-//                Spacer()
+                Spacer()
             }
             .padding(.top, 5)
             .padding()
             .foregroundColor(.black)
 //            Divider()
+            
             
         }
         

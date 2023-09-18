@@ -7,14 +7,12 @@
 
 import SwiftUI
 
-struct Universitys: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+struct Universitys: Hashable, Identifiable {
+    var id: UUID
+    var UniID: String
+    var UniName: String
+    
 }
 
-struct Universitys_Previews: PreviewProvider {
-    static var previews: some View {
-        Universitys()
-    }
-}
+
+

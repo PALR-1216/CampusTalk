@@ -1,15 +1,12 @@
-//
-//  SignUpView.swift
-//  track3
-//
-//  Created by Pedro Alejandro LR on 9/6/23.
-//
 
 import SwiftUI
 import Firebase
 import FirebaseFirestore
 
 struct SignUpView: View {
+    
+    
+    
     @EnvironmentObject var dataManager:DataManager
     @State private var ErrorIsShowing = false
     @State private var UserName = ""
@@ -18,9 +15,13 @@ struct SignUpView: View {
     @State private var signUpError = ""
     @State private var ColorscurrentIndex = 0
     @State private var ImagesscurrentIndex = 0
+    @State private var Selected = "inter"
+    @State private var indexSelected = 0
     let colors: [Color] = [.green, .yellow, .red]
+    // in the future i need to store that array in the database
     let images: [String] = ["Colegio", "Inter", "UprRioPiedras"]
-    let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    let unis: [String] = ["Colegio", "Inter De San German", "UprRioPiedras"]
+    let timer = Timer.publish(every: 1.5, on: .main, in: .common).autoconnect().throttle(for: .seconds(2), scheduler: RunLoop.main, latest: true)
 
     
     var body: some View {
@@ -47,7 +48,7 @@ struct SignUpView: View {
                     Text("Sign Up")
                         .font(.largeTitle)
                         .bold()
-                        .padding()
+//                        .padding()
                     
                     Text(signUpError)
                         .foregroundColor(.red)
@@ -59,6 +60,41 @@ struct SignUpView: View {
                         .frame(width: 300, height: 50)
                         .background(Color.black.opacity(0.05))
                         .cornerRadius(10)
+                    
+                    Menu {
+                        ForEach(0..<unis.count, id:\.self) {i in
+                            Button {
+                                Selected = unis[i]
+                                indexSelected = i
+                            } label: {
+                                HStack {
+                                    Image("\(images[i])")
+                                        .frame(width: 150, height: 150)
+                                        .imageScale(.small)
+                                    Text(unis[i])
+                                }
+                            }
+
+                            
+                        }
+                    } label: {
+                        HStack {
+                            Image(images[indexSelected])
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+//                                .padding(.trailing, 80)
+                            Text("\(Selected)")
+                                .foregroundColor(.black)
+                               
+                        }
+                        .frame(width: 300, height: 50)
+                        .background(Color.black.opacity(0.05))
+                        .cornerRadius(10)
+                        
+                    }
+                    
+
                     
                     TextField("Email", text: $Email)
                         .padding()
@@ -124,6 +160,7 @@ struct SignUpView: View {
                     ImagesscurrentIndex = (ImagesscurrentIndex + 1) % images.count
                     
                 }
+//                print("hello world")
             }
         }
         
@@ -140,4 +177,3 @@ struct SignUpView_Previews: PreviewProvider {
         
     }
 }
-

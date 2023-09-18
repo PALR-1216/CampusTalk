@@ -13,11 +13,16 @@ struct LoginView: View {
     @State private var password = ""
     @State private var isShowingSignUp = false
     @State private var loginError: Error? = nil
+    let colors: [Color] = [.green, .yellow, .red]
+    @State private var ColorscurrentIndex = 0
+    @State private var ImagesscurrentIndex = 0
+    let images: [String] = ["Colegio", "Inter", "UprRioPiedras"]
+    let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect().throttle(for: .seconds(2), scheduler: RunLoop.main, latest: true)
     
     var body: some View {
         NavigationView {
             ZStack {
-                Color.green
+                colors[ColorscurrentIndex]
                     .ignoresSafeArea()
                 Circle()
                     .scale(1.7)
@@ -29,6 +34,11 @@ struct LoginView: View {
                 
                 
                 VStack {
+                    
+                    Image(images[ImagesscurrentIndex])
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 150, height: 150)
                     
                     Text("Login")
                         .font(.largeTitle)
@@ -59,7 +69,7 @@ struct LoginView: View {
                     }
                     .foregroundColor(.white)
                     .frame(width: 300, height: 50)
-                    .background(Color.blue)
+                    .background(colors[ColorscurrentIndex])
                     .cornerRadius(10)
                     //
                     Button("Create Account?") {
@@ -67,6 +77,7 @@ struct LoginView: View {
                         
                         
                     }
+//                    .foregroundColor(colors[ColorscurrentIndex])
                     
                     
                 }
@@ -77,7 +88,16 @@ struct LoginView: View {
                 EmptyView()
             }
             .navigationBarBackButtonHidden(false)
+            
+            .onReceive(timer) { _ in
+                withAnimation {
+                    ColorscurrentIndex = (ColorscurrentIndex + 1) % colors.count
+                    ImagesscurrentIndex = (ImagesscurrentIndex + 1) % images.count
+                    
+                }
+            }
         }
+        .statusBar(hidden: true) 
         
         
     }

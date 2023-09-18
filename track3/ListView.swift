@@ -97,11 +97,13 @@ struct ListView: View {
                 
               
             }
+
             .onAppear{
                 dataManager.fetchPost()
             }
-           
+         
         }
+       
         .sheet(isPresented: $showSheet) {
             BottomSheet()
         }
@@ -110,15 +112,8 @@ struct ListView: View {
             dataManager.fetchPost()
             
         }
-        
-       
-         
     }
-    
-    
-    
 }
-
 
 
 
