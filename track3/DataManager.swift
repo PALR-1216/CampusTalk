@@ -18,14 +18,16 @@ import GoogleSignInSwift
 class DataManager: ObservableObject {
     @Published var posts: [Posts] = []
     @Published var users: [Users] = []
+    @Published var unis: [Unis] = []
     @Published var isLoggedIn: Bool = false
     @State var isNewUser : Bool = false
     
     init() {
         
 //        checkIfUserIsLoggedIn()
-        Auth.auth().addStateDidChangeListener { _, user in
+        Auth.auth().addStateDidChangeListener { [self] _, user in
             self.isLoggedIn = user != nil
+            self.fethUserProfile(userID: user?.uid ?? "")
             
             
         }
@@ -60,6 +62,30 @@ class DataManager: ObservableObject {
                 }
             }
         }
+    }
+    
+    func GetUnis() {
+        let db = Firestore.firestore()
+        let ref = db.collection("Unis")
+        ref.getDocuments { Snapshot, err in
+            guard err == nil else {
+                print(err!.localizedDescription)
+                return
+            }
+
+            if let Snapshot = Snapshot {
+                for document in Snapshot.documents {
+                    let data = document.data()
+                    let ID = data["UniID"] as? Int ?? 0
+                    let uniName = data["UniName"] as? String ?? ""
+                    let uni = Unis(id: ID, UniName: uniName)
+                    self.unis.append(uni)
+                    print(uni)
+                    
+                }
+            }
+        }
+
     }
     
     func AddPost(Message:String) {
@@ -107,10 +133,8 @@ class DataManager: ObservableObject {
 //    }
     
     func fethUserProfile(userID:String) {
-        users.removeAll()
-        
-        
-        
+        let db = Firestore.firestore()
+        let ref = db.collection("Users")
     }
     
     
@@ -118,7 +142,7 @@ class DataManager: ObservableObject {
     func checkUsernameAvailability(UserName: String, completion: @escaping (Bool) -> Void) {
         let db = Firestore.firestore()
         let ref = db.collection("Users")
-        ref.whereField("UserName", isEqualTo: UserName).getDocuments { querysnapShot, error in
+        ref.whereField("userName", isEqualTo: UserName).getDocuments { querysnapShot, error in
             if let error = error {
                 print("Error checking username availability: \(error.localizedDescription)")
                 completion(false)
@@ -152,7 +176,7 @@ class DataManager: ObservableObject {
         }
     }
     
-    func createUserWithEmailPassword(Email:String, Pass:String, UserName:String, completion:@escaping (Result<User?, Error>) -> Void) {
+    func createUserWithEmailPassword(Email:String, Pass:String, UserName:String, uniName:String, completion:@escaping (Result<User?, Error>) -> Void) {
         
         checkUsernameAvailability(UserName: UserName) { usernameAvailable in
             if usernameAvailable {
@@ -171,7 +195,7 @@ class DataManager: ObservableObject {
                     }
                     
                     else if let user = result?.user {
-                        self.createUser(userID: user.uid, Username: UserName)
+                        self.createUser(userID: user.uid, username: UserName, UniName: uniName)
                         completion(.success(user))
                         
                         
@@ -192,29 +216,57 @@ class DataManager: ObservableObject {
         }
     }
     
-    func createUser(userID: String, Username: String) {
-//        users.removeAll()
+//    func createUser(userID: String, Username: String) {
+////        users.removeAll()
+//        let db = Firestore.firestore()
+//        let ref = db.collection("Users")
+//
+//        ref.getDocuments { snapshot, err in
+//            guard err == nil else {
+//                print(err!.localizedDescription)
+//                return
+//            }
+//
+//            if let snapshot = snapshot {
+//                for document in snapshot.documents {
+//                    let data = document.data()
+//                    let ID = data["UserID"] as? String ?? ""
+//                    let userName = data["userName"] as? String ?? ""
+//                    let user = Users(id: UUID(), userName: Username, userID: ID)
+//                    self.users.append(user)
+////                    print(user.userName)
+//
+//                }
+//            }
+//
+//
+//        }
+//    }
+    
+    func createUser(userID: String, username: String, UniName:String) {
         let db = Firestore.firestore()
-        let ref = db.collection("Users")
+        let usersRef = db.collection("Users")
 
-        ref.getDocuments { snapshot, err in
-            guard err == nil else {
-                print(err!.localizedDescription)
-                return
-            }
+        // Create a new user document
+        let newUserDocument = usersRef.document()
+        let userData: [String: Any] = [
+            "UserID": userID,
+            "userName": username,
+            "UniName": UniName
+            // Add other user data as needed
+        ]
+        
 
-            if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    let data = document.data()
-                    let ID = data["UserID"] as? String ?? ""
-                    let userName = data["userName"] as? String ?? ""
-                    let user = Users(id: UUID(), userName: Username, userID: ID)
-                    self.users.append(user)
-                    print(user)
-                }
+        // Set the data for the new user document
+        newUserDocument.setData(userData) { error in
+            if let error = error {
+                print("Error creating user: \(error.localizedDescription)")
+            } else {
+                print("User created successfully")
             }
         }
     }
+
     
     func checkIfUserIsLoggedIn() -> Bool {
         if let user = Auth.auth().currentUser {
@@ -248,6 +300,8 @@ class DataManager: ObservableObject {
             }
         }
     }
+    
+
     
     func signOut() {
         do {

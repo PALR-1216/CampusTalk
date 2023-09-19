@@ -101,6 +101,7 @@ struct ListView: View {
             .onAppear{
                 dataManager.fetchPost()
             }
+            
          
         }
        

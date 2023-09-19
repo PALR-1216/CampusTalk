@@ -13,6 +13,7 @@ struct Users: Identifiable, Hashable {
     var id:UUID
     var userName: String
     var userID: String
+    var uniName:String
     
 }
 

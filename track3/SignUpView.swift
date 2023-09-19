@@ -15,12 +15,12 @@ struct SignUpView: View {
     @State private var signUpError = ""
     @State private var ColorscurrentIndex = 0
     @State private var ImagesscurrentIndex = 0
-    @State private var Selected = "inter"
-    @State private var indexSelected = 0
-    let colors: [Color] = [.green, .yellow, .red]
+    @State private var Selected = "Interamericana de San German"
+    @State private var indexSelected = 1
+    let colors: [Color] = [.green, .yellow]
     // in the future i need to store that array in the database
-    let images: [String] = ["Colegio", "Inter", "UprRioPiedras"]
-    let unis: [String] = ["Colegio", "Inter De San German", "UprRioPiedras"]
+    let images: [String] = ["Colegio", "Interamericana de San German"]
+//    let unis: [String] = ["Colegio", "Inter De San German"]
     let timer = Timer.publish(every: 1.5, on: .main, in: .common).autoconnect().throttle(for: .seconds(2), scheduler: RunLoop.main, latest: true)
 
     
@@ -60,37 +60,50 @@ struct SignUpView: View {
                         .frame(width: 300, height: 50)
                         .background(Color.black.opacity(0.05))
                         .cornerRadius(10)
+//                    Text("select Your College")
                     
                     Menu {
-                        ForEach(0..<unis.count, id:\.self) {i in
+
+                        
+                        ForEach(dataManager.unis, id:\.self) {i in
+                            
                             Button {
-                                Selected = unis[i]
-                                indexSelected = i
+                                Selected = i.UniName
+                                indexSelected = i.id
+                                
                             } label: {
                                 HStack {
-                                    Image("\(images[i])")
+                                    Image("\(i.UniName)")
+                                    
                                         .frame(width: 150, height: 150)
                                         .imageScale(.small)
-                                    Text(unis[i])
+                                    Text("\(i.UniName)")
                                 }
                             }
-
-                            
                         }
+                            
                     } label: {
                         HStack {
-                            Image(images[indexSelected])
+                            Image(Selected)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 50, height: 50)
-//                                .padding(.trailing, 80)
+//
+                                .padding()
+                          
                             Text("\(Selected)")
                                 .foregroundColor(.black)
-                               
+                                .padding(.leading, 40)
+                                .fontWeight(.bold)
+                            Spacer()
+                            
                         }
                         .frame(width: 300, height: 50)
                         .background(Color.black.opacity(0.05))
                         .cornerRadius(10)
+                       
+                        
+                       
                         
                     }
                     
@@ -109,12 +122,12 @@ struct SignUpView: View {
                         .cornerRadius(10)
                     
                     Button("Sign Up") {
-                        dataManager.createUserWithEmailPassword(Email: Email, Pass: Password, UserName: UserName) { result in
+                        dataManager.createUserWithEmailPassword(Email: Email, Pass: Password, UserName: UserName, uniName: Selected) { result in
                             switch result {
                             case .success(let user):
                                 // Handle success
                                 if let user = user {
-                                    print("User created successfully: \(user)")
+                                    print("User created successfully: \(user.uid)")
                                     // Do something with the user
                                 } else {
                                     print("User creation was successful, but user data is nil")
@@ -161,6 +174,10 @@ struct SignUpView: View {
                     
                 }
 //                print("hello world")
+            }
+            
+            .onAppear {
+                dataManager.GetUnis()
             }
         }
         

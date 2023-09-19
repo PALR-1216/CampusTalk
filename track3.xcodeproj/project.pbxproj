@@ -36,7 +36,7 @@
 		F2BABA092A9D6A0700C3794B /* LottieView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BABA082A9D6A0700C3794B /* LottieView.swift */; };
 		F2BABA0B2A9D6AF200C3794B /* LoadingLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = F2BABA0A2A9D6AF200C3794B /* LoadingLottie.json */; };
 		F2BABA4F2A9FC86200C3794B /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BABA4E2A9FC86200C3794B /* SideMenu.swift */; };
-		F2D27AF32AB7E08500B9C29B /* Universitys.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D27AF22AB7E08500B9C29B /* Universitys.swift */; };
+		F2D27AF32AB7E08500B9C29B /* Unis.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D27AF22AB7E08500B9C29B /* Unis.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,7 +84,7 @@
 		F2BABA082A9D6A0700C3794B /* LottieView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LottieView.swift; sourceTree = "<group>"; };
 		F2BABA0A2A9D6AF200C3794B /* LoadingLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LoadingLottie.json; sourceTree = "<group>"; };
 		F2BABA4E2A9FC86200C3794B /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
-		F2D27AF22AB7E08500B9C29B /* Universitys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Universitys.swift; sourceTree = "<group>"; };
+		F2D27AF22AB7E08500B9C29B /* Unis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unis.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,7 +148,7 @@
 				F2BAB9F52A98FBCC00C3794B /* Post.swift */,
 				F25826522AAFE74400D0A82F /* NewListView.swift */,
 				F290799B2AA97D68001FE862 /* SignUpView.swift */,
-				F2D27AF22AB7E08500B9C29B /* Universitys.swift */,
+				F2D27AF22AB7E08500B9C29B /* Unis.swift */,
 				F29079952AA84150001FE862 /* Users.swift */,
 				F2975FD52A98EC80004A763B /* ContentView.swift */,
 				F29079992AA8FE96001FE862 /* LoginView.swift */,
@@ -341,7 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F2BABA4F2A9FC86200C3794B /* SideMenu.swift in Sources */,
-				F2D27AF32AB7E08500B9C29B /* Universitys.swift in Sources */,
+				F2D27AF32AB7E08500B9C29B /* Unis.swift in Sources */,
 				F290799C2AA97D68001FE862 /* SignUpView.swift in Sources */,
 				F2975FD62A98EC80004A763B /* ContentView.swift in Sources */,
 				F2BAB9FF2A9C068400C3794B /* MainView.swift in Sources */,

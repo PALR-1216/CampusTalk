@@ -13,10 +13,10 @@ struct LoginView: View {
     @State private var password = ""
     @State private var isShowingSignUp = false
     @State private var loginError: Error? = nil
-    let colors: [Color] = [.green, .yellow, .red]
+    let colors: [Color] = [.green, .yellow]
     @State private var ColorscurrentIndex = 0
     @State private var ImagesscurrentIndex = 0
-    let images: [String] = ["Colegio", "Inter", "UprRioPiedras"]
+    let images: [String] = ["Colegio", "Interamericana de San German"]
     let timer = Timer.publish(every: 2, on: .main, in: .common).autoconnect().throttle(for: .seconds(2), scheduler: RunLoop.main, latest: true)
     
     var body: some View {

@@ -5,11 +5,11 @@
 //  Created by Pedro Alejandro LR on 9/17/23.
 //
 
+import Foundation
 import SwiftUI
 
-struct Universitys: Hashable, Identifiable {
-    var id: UUID
-    var UniID: String
+struct Unis: Hashable, Identifiable {
+    var id: Int
     var UniName: String
     
 }

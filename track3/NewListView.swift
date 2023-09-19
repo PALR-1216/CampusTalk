@@ -109,6 +109,8 @@ struct NewListView: View {
                 
                 
                 Button {
+                    isLiked = true
+                    
                     
                 } label: {
                     Label("Like", systemImage: isLiked ? "heart.fill" : "heart")
