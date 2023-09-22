@@ -8,6 +8,10 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import Firebase
+import FirebaseFirestore
+import AuthenticationServices
+import GoogleSignIn
+import GoogleSignInSwift
 
 struct ListView: View {
     @EnvironmentObject var dataManager:DataManager
@@ -15,9 +19,9 @@ struct ListView: View {
     var body: some View {
         NavigationView {
             
+            
             ScrollView {
                 ForEach(dataManager.posts, id: \.self){post in
-                    
                     NewListView(Message: post.postContent)
                     NavigationLink {
                         
@@ -99,7 +103,8 @@ struct ListView: View {
             }
 
             .onAppear{
-                dataManager.fetchPost()
+                dataManager.fetchPost(userID: Auth.auth().currentUser!.uid)
+               
             }
             
          
@@ -110,8 +115,11 @@ struct ListView: View {
         }
         
         .refreshable {
-            dataManager.fetchPost()
-            
+//            dataManager.fetchPost(userID: Auth.auth().currentUser!.uid)
+            dataManager.fetchUserProfile(userID: Auth.auth().currentUser!.uid)
+//            dataManager.fetchPost(userID: dataManager)
+//            dataManager.fethUserProfile(userID: dataManager.userID)
+
         }
     }
 }

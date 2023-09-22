@@ -19,21 +19,32 @@ class DataManager: ObservableObject {
     @Published var posts: [Posts] = []
     @Published var users: [Users] = []
     @Published var unis: [Unis] = []
+    @Published var UsersUni = String()
+//    @Published var userID: String = ""
     @Published var isLoggedIn: Bool = false
     @State var isNewUser : Bool = false
+    @State var userID: String = ""
     
     init() {
+        
         
 //        checkIfUserIsLoggedIn()
         Auth.auth().addStateDidChangeListener { [self] _, user in
             self.isLoggedIn = user != nil
-            self.fethUserProfile(userID: user?.uid ?? "")
             
             
+            
+            //make a iff that checks if user is logged in and if user is loggedx in then use the userid to check for users uni and fetch post with tue uni id
         }
         
         
+//        self.fethUserProfile(userID:Auth.auth().currentUser!.uid)
     }
+    
+  
+
+    
+   
     
     //make a function to fetch users Profile Info
     //make a function to change the user name of the user but thast in the future rign now i dont need that
@@ -41,30 +52,61 @@ class DataManager: ObservableObject {
    
     
     
-    func fetchPost() {
+//    func fetchPost() {
+//          posts.removeAll()
+//          let db = Firestore.firestore()
+//          let ref = db.collection("Posts")
+//        let userRef = db.collection("Users")
+//
+//          ref.getDocuments { snapshot, err in
+//              guard err == nil else {
+//                  print(err!.localizedDescription)
+//                  return
+//              }
+//              if let snapshot = snapshot {
+//                  for document in snapshot.documents {
+//                      let data = document.data()
+//                      let ID = data["ID"] as? String ?? ""
+//                      let content = data["postContent"] as? String ?? ""
+//                      let university = data["university"] as? String ?? ""
+//                      let post = Posts(id: ID, postContent: content, university: university)
+//                      self.posts.append(post)
+//                      print(post)
+//                  }
+//              }
+//          }
+//      }
+    
+    
+    
+    func fetchPost(userID: String) {
+        fetchUserProfile(userID: userID)
+        
         posts.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Posts")
-        ref.getDocuments { snapshot, err in
-            guard err == nil else {
-                print(err!.localizedDescription)
-                return
-            }
-            if let snapshot = snapshot {
-                for document in snapshot.documents {
-                    let data = document.data()
-                    let ID = data["ID"] as? String ?? ""
-                    let content = data["postContent"] as? String ?? ""
-                    let university = data["university"] as? String ?? ""
-                    let post = Posts(id: ID, postContent: content, university: university)
-                    self.posts.append(post)
-                    print(post)
-                }
-            }
-        }
-    }
+        
+          ref.getDocuments { snapshot, err in
+              guard err == nil else {
+                  print(err!.localizedDescription)
+                  return
+              }
+              if let snapshot = snapshot {
+                  for document in snapshot.documents {
+                      let data = document.data()
+                      let ID = data["ID"] as? String ?? ""
+                      let content = data["postContent"] as? String ?? ""
+                      let university = data["university"] as? String ?? ""
+                      let post = Posts(id: ID, postContent: content, university: university)
+                      self.posts.append(post)
+//                      print(post)
+                  }
+              }
+          }
+      }
     
     func GetUnis() {
+        unis.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Unis")
         ref.getDocuments { Snapshot, err in
@@ -132,12 +174,34 @@ class DataManager: ObservableObject {
 //        }
 //    }
     
-    func fethUserProfile(userID:String) {
+    func fetchUserProfile(userID: String) {
         let db = Firestore.firestore()
-        let ref = db.collection("Users")
+        let usersCollection = db.collection("Users")
+        
+        usersCollection.whereField("UserID", isEqualTo: userID).getDocuments { (querySnapshot, error) in
+                if let error = error {
+                    print("Error fetching documents: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let documents = querySnapshot?.documents, !documents.isEmpty {
+                    // Since UserID should be unique, there should be at most one document in the result
+                    let document = documents[0]
+                    let userData = document.data()
+                    
+                    if let uni = userData["UniName"] as? String {
+                        print("User's University: \(uni)")
+                        self.UsersUni = uni
+                        
+                    } else {
+                        print("University data not found.")
+                    }
+                } else {
+                    print("Document with UserID '\(userID)' not found.")
+                }
+            }
     }
-    
-    
+
     
     func checkUsernameAvailability(UserName: String, completion: @escaping (Bool) -> Void) {
         let db = Firestore.firestore()

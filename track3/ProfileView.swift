@@ -26,7 +26,7 @@ struct ProfileView: View {
             .navigationTitle("Profile")
             .onAppear {
                 // run profile fetch
-                dataManager.fethUserProfile(userID: Auth.auth().currentUser?.uid ?? "")
+//                dataManager.fetchPost()
             }
         }
         
