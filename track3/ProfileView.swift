@@ -13,6 +13,8 @@ struct ProfileView: View {
     var body: some View {
         NavigationView{
             VStack {
+                Text(dataManager.UsersUni)
+                Text(dataManager.userName)
                 
                 
                 Button {

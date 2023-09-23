@@ -26,7 +26,7 @@ struct BottomSheet: View {
             Button {
 //                print(UUID().uuidString)
                 if !Message.isEmpty {
-                    dataManager.AddPost(Message: Message)
+                    dataManager.AddPost(Message: Message, UsersUni: dataManager.UsersUni)
                     
                 }
                 else{

@@ -7,9 +7,13 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import Firebase
 
 struct NewListView: View {
     @State var Message = ""
+//    @State var Time: Date
+    @State var time = Date()
+    @EnvironmentObject var dataManager:DataManager
     @State private var isLiked = false
     var body: some View {
         
@@ -35,8 +39,9 @@ struct NewListView: View {
                     .font(.callout)
                 Text("-")
                     .font(.callout)
-                Text("3h")
-                    .font(.callout)
+//                Text("\(timeStamp)")
+//                Text("\(dataManager.TimeAgoSinceDate(Time))")
+//                    .font(.callout)
                 
                 Spacer()
                     

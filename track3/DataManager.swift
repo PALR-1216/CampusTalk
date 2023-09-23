@@ -23,14 +23,23 @@ class DataManager: ObservableObject {
 //    @Published var userID: String = ""
     @Published var isLoggedIn: Bool = false
     @State var isNewUser : Bool = false
-    @State var userID: String = ""
+//    @State var userID: String = ""
+    @Published var userName = String()
+    @Published var isLoading = false
     
     init() {
+//        fetchUserProfile(userID: Auth.auth().currentUser!.uid)
+//        fetchUserProfile(userID: Auth.auth().currentUser?.uid ?? "")
+        print(UsersUni)
         
         
 //        checkIfUserIsLoggedIn()
         Auth.auth().addStateDidChangeListener { [self] _, user in
             self.isLoggedIn = user != nil
+            isLoading = true
+            fetchUserProfile(userID: user?.uid ?? "")
+            isLoading = false
+            
             
             
             
@@ -79,31 +88,40 @@ class DataManager: ObservableObject {
     
     
     
-    func fetchPost(userID: String) {
-        fetchUserProfile(userID: userID)
-        
+
+    func fetchPost(UsersUni: String) {
         posts.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Posts")
         
-          ref.getDocuments { snapshot, err in
-              guard err == nil else {
-                  print(err!.localizedDescription)
-                  return
-              }
-              if let snapshot = snapshot {
-                  for document in snapshot.documents {
-                      let data = document.data()
-                      let ID = data["ID"] as? String ?? ""
-                      let content = data["postContent"] as? String ?? ""
-                      let university = data["university"] as? String ?? ""
-                      let post = Posts(id: ID, postContent: content, university: university)
-                      self.posts.append(post)
-//                      print(post)
-                  }
-              }
-          }
-      }
+        // Add a query to filter posts by university
+        ref.whereField("university", isEqualTo: UsersUni).getDocuments { snapshot, err in
+            guard err == nil else {
+                print(err!.localizedDescription)
+                return
+            }
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let ID = data["ID"] as? String ?? ""
+                    let content = data["postContent"] as? String ?? ""
+                    let university = data["university"] as? String ?? ""
+                    let Time = data["timeStamp"] as? Timestamp ?? Timestamp()
+                    let user = data["User"] as? String ?? ""
+                    
+                 
+                        // Create the Posts object with the converted timestamp
+                        let post = Posts(id: ID, postContent: content, university: university, timeStamp: Time, User: user)
+                        self.posts.append(post)
+//                    print(post)
+                    
+                }
+                self.posts.sort(by: { $0.timeStamp.dateValue() > $1.timeStamp.dateValue() })
+            }
+        }
+    }
+
+
     
     func GetUnis() {
         unis.removeAll()
@@ -130,49 +148,22 @@ class DataManager: ObservableObject {
 
     }
     
-    func AddPost(Message:String) {
+    func AddPost(Message:String, UsersUni:String) {
         
         let db = Firestore.firestore()
         let ref = db.collection("Posts").document(Message)
-        ref.setData(["ID": UUID().uuidString, "postContent": Message, "university": "Interamericana de San German"])
+//        let timeStamp = Timestamp(date: Date.now)
+        
+        ref.setData(["ID": UUID().uuidString, "postContent": Message, "timeStamp": FieldValue.serverTimestamp(), "User": "\(userName)",  "university": "\(UsersUni)"])
         
     }
     
-//    func createUser(userID: String, Username: String) {
-//
-//        let db = Firestore.firestore()
-//        let ref = db.collection("Users").document(userID)
-//
-//        ref.getDocument { document, error in
-//            if let document = document, document.exists {
-//                print("User with userID \(userID) already exists")
-//
-//            }
-//
-//            else if let error = error {
-//                print("Error checking for user: \(error.localizedDescription)")
-//
-//            }
-//
-//            else  {
-//
-//                let userData: [String: Any] = [
-//                    "UserName": Username
-//                ]
-//
-//                ref.setData(userData) { error in
-//                    if let error = error {
-//                        print("Error adding user: \(error.localizedDescription)")
-//                    }
-//
-//                    else {
-//                        print("User added successfully user ID: \(userID)")
-//                    }
-//                }
-//
-//            }
-//        }
-//    }
+
+    
+
+    
+    
+    
     
     func fetchUserProfile(userID: String) {
         let db = Firestore.firestore()
@@ -188,10 +179,18 @@ class DataManager: ObservableObject {
                     // Since UserID should be unique, there should be at most one document in the result
                     let document = documents[0]
                     let userData = document.data()
+                    if let userName = userData["userName"] as? String {
+                        print("Username: \(userName)")
+                        self.userName = userName
+                        print("userName: \(userName)")
+                        
+                    }
                     
                     if let uni = userData["UniName"] as? String {
                         print("User's University: \(uni)")
                         self.UsersUni = uni
+                        self.fetchPost(UsersUni: uni)
+                        
                         
                     } else {
                         print("University data not found.")
