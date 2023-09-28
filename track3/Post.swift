@@ -16,6 +16,9 @@ struct Posts:Identifiable, Hashable {
     var university:String
     var timeStamp: Timestamp
     var User:String
+    var UserID:String
+    var LikesCount: Int
+//    var isLiked: Bool 
     
     var createdAtAgoString: String {
            let currentDate = Date()

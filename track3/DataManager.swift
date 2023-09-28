@@ -27,30 +27,30 @@ class DataManager: ObservableObject {
     @Published var userName = String()
     @Published var isLoading = false
     
+    
+    
     init() {
 //        fetchUserProfile(userID: Auth.auth().currentUser!.uid)
 //        fetchUserProfile(userID: Auth.auth().currentUser?.uid ?? "")
-        print(UsersUni)
+//        print(UsersUni)
+        
         
         
 //        checkIfUserIsLoggedIn()
         Auth.auth().addStateDidChangeListener { [self] _, user in
             self.isLoggedIn = user != nil
-            isLoading = true
-            fetchUserProfile(userID: user?.uid ?? "")
-            isLoading = false
-            
-            
+            self.fetchUserProfile(userID: user?.uid ?? "")
             
             
             //make a iff that checks if user is logged in and if user is loggedx in then use the userid to check for users uni and fetch post with tue uni id
         }
         
         
+        
 //        self.fethUserProfile(userID:Auth.auth().currentUser!.uid)
     }
     
-  
+  //TODO: Add a function that runs in the app instead of refpreshing the app it will update automatically
 
     
    
@@ -90,6 +90,7 @@ class DataManager: ObservableObject {
     
 
     func fetchPost(UsersUni: String) {
+        self.isLoading = true
         posts.removeAll()
         let db = Firestore.firestore()
         let ref = db.collection("Posts")
@@ -108,15 +109,18 @@ class DataManager: ObservableObject {
                     let university = data["university"] as? String ?? ""
                     let Time = data["timeStamp"] as? Timestamp ?? Timestamp()
                     let user = data["User"] as? String ?? ""
+                    let LikesCount = data["LikesCount"] as? Int ?? 0
                     
                  
                         // Create the Posts object with the converted timestamp
-                        let post = Posts(id: ID, postContent: content, university: university, timeStamp: Time, User: user)
+                    let post = Posts(id: ID, postContent: content, university: university, timeStamp: Time, User: user, UserID: Auth.auth().currentUser?.uid ?? "", LikesCount:LikesCount)
                         self.posts.append(post)
+                  
 //                    print(post)
                     
                 }
                 self.posts.sort(by: { $0.timeStamp.dateValue() > $1.timeStamp.dateValue() })
+                self.isLoading = false
             }
         }
     }
@@ -151,15 +155,99 @@ class DataManager: ObservableObject {
     func AddPost(Message:String, UsersUni:String) {
         
         let db = Firestore.firestore()
-        let ref = db.collection("Posts").document(Message)
+        let postID = UUID().uuidString
+        let ref = db.collection("Posts").document(postID)
 //        let timeStamp = Timestamp(date: Date.now)
         
-        ref.setData(["ID": UUID().uuidString, "postContent": Message, "timeStamp": FieldValue.serverTimestamp(), "User": "\(userName)",  "university": "\(UsersUni)"])
+        ref.setData(["ID": postID, "postContent": Message, "timeStamp": FieldValue.serverTimestamp(), "User": "\(userName)", "LikesCount": 0,  "university": "\(UsersUni)", "UserID": Auth.auth().currentUser?.uid ?? ""])
         
     }
     
+    
+
+
+    func checkIfPostIsLiked(postId: String, completion: @escaping (Bool) -> Void) {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let db = Firestore.firestore()
+        let postRef = db.collection("posts").document(postId)
+        let userLikesRef = db.collection("users").document(userId).collection("likes")
+
+        // Fetch the post
+        postRef.getDocument { (postSnapshot, error) in
+            if let error = error {
+                print("Error getting post: \(error)")
+                completion(false)
+            } else if let postSnapshot = postSnapshot {
+                // Fetch the user's likes
+                userLikesRef.whereField("postId", isEqualTo: postId).getDocuments { (likeSnapshot, error) in
+                    if let error = error {
+                        print("Error getting likes: \(error)")
+                        completion(false)
+                    } else if let likeSnapshot = likeSnapshot {
+                        // Check if the post is in the user's likes
+                        let isLiked = !likeSnapshot.isEmpty
+                        completion(isLiked)
+                    }
+                }
+            }
+        }
+    }
+
+    // Usage:
+//    checkIfPostIsLiked(postId: "somePostId") { (isLiked) in
+//        if isLiked {
+//            // Update heart icon to red
+//        } else {
+//            // Update heart icon to default
+//        }
+//    }
 
     
+    //TODO: Need to check how to add this function to the main view and see all the hearts in the post list
+    
+  
+    func LikePost(postId: String, userID: String) {
+        let db = Firestore.firestore()
+        
+        // Create a reference to the "posts" collection and the specific post document
+        let postRef = db.collection("Posts").document(postId)
+        
+        // Check if the user has already liked the post
+        db.collection("Likes").whereField("PostID", isEqualTo: postId).whereField("UserID", isEqualTo: userID).getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("Error in checking if user has already liked the post: \(error.localizedDescription)")
+                return
+            }
+            
+            // If the user has not liked the post, proceed to like it
+            if querySnapshot?.isEmpty ?? true {
+                // Create a new like document in the "Likes" collection
+                let likeData: [String: Any] = [
+                    "PostID": postId,
+                    "UserID": userID
+                ]
+                
+                db.collection("Likes").addDocument(data: likeData) { err in
+                    if let err = err {
+                        print("Error in adding like: \(err.localizedDescription)")
+                    } else {
+                        // Successfully added like, now increment the likesCount for the post
+                        let incrementValue = 1
+                        postRef.updateData(["LikesCount": FieldValue.increment(Int64(incrementValue))]) { (error) in
+                            if let error = error {
+                                print("Error incrementing likes count: \(error.localizedDescription)")
+                            } else {
+                                print("Successfully liked post and incremented likes count")
+                            }
+                        }
+                    }
+                }
+            } else {
+                print("User has already liked this post.")
+            }
+        }
+    }
 
     
     

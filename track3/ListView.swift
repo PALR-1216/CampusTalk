@@ -12,156 +12,64 @@ import FirebaseFirestore
 import AuthenticationServices
 import GoogleSignIn
 import GoogleSignInSwift
+import Lottie
 
 struct ListView: View {
     @EnvironmentObject var dataManager:DataManager
     @State private var showSheet = false
     @State private var isLiked = false
+    
+    
 //    @State private var isLoading = false
     var body: some View {
         
         NavigationView {
-            
-            ScrollView{
-//                if dataManager.isLoading {
-//                    VStack {
-//
-//                        ProgressView("Loading...")
-//                            .padding()
-//
-//                    }
-//                }else{
-                    
-                    
-                    ForEach(dataManager.posts, id:\.id){post in
-                        
-                        
-                        VStack {
-                            
-                            
-                            //            ZStack {
-                            //                WebImage(url: URL(string: "https://www.nicepng.com/png/full/970-9708408_universidad-interamericana-de-puerto-rico-inter-metro.png"))
-                            //                    .resizable()
-                            //                    .scaledToFit()
-                            //                    .frame(width: 300, height: 300)
-                            //                    .padding()
-                            //            }
-                            Divider()
-                            
-                            
-                            
-                            
-                            HStack {
-                                
-                                Text("@\(post.User)")
-                                    .font(.callout)
-                                Text("-")
-                                    .font(.callout)
-                                
-                                Text(post.createdAtAgoString)
-                                    .font(.callout)
-                                
-                                Spacer()
-                                
-                                
-                                Menu {
-                                    Button(action: {
-                                        // Handle the action for the first menu item
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "exclamationmark.bubble")
-                                            Text("Report")
-                                        }
-                                    }
-                                    
-                                    Button(action: {
-                                        // Handle the action for the second menu item
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "trash")
-                                            Text("Delete")
-                                        }
-                                    }
-                                    
-                                    Button(action: {
-                                        // Handle the action for the third menu item
-                                    }) {
-                                        HStack {
-                                            Image(systemName: "arrow.down.circle")
-                                            Text("Export")
-                                        }
-                                    }
-                                }label: {
-                                    Image(systemName: "ellipsis")
-                                    
-                                }
-                                .menuStyle(BorderlessButtonMenuStyle())
-                                
-                                .padding(.trailing, 10)
-                                
-                            }
-                            .padding(10)
-                            .foregroundColor(.gray)
-                            
-                            
-                            
-                            
-                            HStack {
-                                Text(post.postContent)
-                                    .padding()
-                                
-                                Spacer()
-                            }
-                            
-                            
-                            
-                            
-                            .fontWeight(.semibold)
-                            
-                            
-                            HStack {
-                                Button {
-                                    
-                                } label: {
-                                    Label("comment", systemImage: "ellipsis.message")
-                                        .labelStyle(IconOnlyLabelStyle())
-                                        .font(.title2)
-                                    
-                                    
-                                }
-                                //                .padding(.horizontal,50)
-                                
-                                
-                                Button {
-                                    isLiked = true
-                                    
-                                    
-                                } label: {
-                                    Label("Like", systemImage: isLiked ? "heart.fill" : "heart")
-                                        .labelStyle(IconOnlyLabelStyle())
-                                        .font(.title2)
-                                        .foregroundColor(isLiked ? .red : .black)
-                                }
-                                //                .padding(.horizontal,50)
-                                
-                                
-                                
-                                
-                                Spacer()
-                            }
-                            .padding(.top, 5)
-                            .padding()
-                            .foregroundColor(.black)
-                            //            Divider()
-                            
-                            
-                        }
-                    }
-//                }
+            ZStack{
+        //            Color.purple.opacity(0.58).ignoresSafeArea(.all)
+                    Circle()
+                        .foregroundColor(.yellow.opacity(0.20))
+                        .blur(radius: 8)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                        .offset(x: -90, y: -200)
+                    Circle()
+                        .foregroundColor(.green.opacity(0.20))
+                        .blur(radius: 8)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
+                        .offset(x: 80, y: 200)
                 
+                if dataManager.isLoading {
+                    ProgressView("Loading")
+            
+                    
+                }
+                
+                ScrollView{
+                    
+                    
+                    
+                    
+                    
+                    
+                    if dataManager.posts.isEmpty {
+                        ShowEmptyView()
+                        
+                    }
+                    
+                    else{
+                        
+                        
+                        ForEach(dataManager.posts, id:\.id){post in
+                            
+                            
+                            NListView(usersUni: post.university, userName: post.User, TimeAgo: post.createdAtAgoString, postContent: post.postContent, Likes: post.LikesCount, postID: post.id, UserID: Auth.auth().currentUser?.uid ?? "", IsLiked: false)
+                        }
+                        
+                    }
+                }
             }
             
             .onAppear{
+                
 //                isLoading = true
                 dataManager.fetchPost(UsersUni: dataManager.UsersUni)
 
@@ -170,7 +78,7 @@ struct ListView: View {
 //                    dataManager.fetchPost(UsersUni: dataManager.UsersUni)
 //                    isLoading = false
 //                }
-//
+              
             }
             
             .navigationTitle("Confesiones")
@@ -207,6 +115,18 @@ struct ListView: View {
         
         }
             
+        
+    }
+}
+
+struct ShowEmptyView: View {
+    var body: some View{
+        VStack {
+            LottieView(name: "LoadingLottie", loopMode: .loop)
+//                .frame(width: 300, height: 300)
+           
+        }
+        Spacer()
         
     }
 }

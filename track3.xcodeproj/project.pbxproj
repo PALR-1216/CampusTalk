@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F25826532AAFE74500D0A82F /* NewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25826522AAFE74400D0A82F /* NewListView.swift */; };
 		F25963622AA62CD300B3BF54 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = F25963612AA62CD300B3BF54 /* GoogleSignIn */; };
 		F25963642AA62CD300B3BF54 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F25963632AA62CD300B3BF54 /* GoogleSignInSwift */; };
 		F29079942AA82C15001FE862 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F29079932AA82C15001FE862 /* ProfileView.swift */; };
@@ -37,6 +36,8 @@
 		F2BABA0B2A9D6AF200C3794B /* LoadingLottie.json in Resources */ = {isa = PBXBuildFile; fileRef = F2BABA0A2A9D6AF200C3794B /* LoadingLottie.json */; };
 		F2BABA4F2A9FC86200C3794B /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2BABA4E2A9FC86200C3794B /* SideMenu.swift */; };
 		F2D27AF32AB7E08500B9C29B /* Unis.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D27AF22AB7E08500B9C29B /* Unis.swift */; };
+		F2D27AF52AC0568500B9C29B /* NListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D27AF42AC0568400B9C29B /* NListView.swift */; };
+		F2D27AF72AC2971500B9C29B /* Likes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2D27AF62AC2971400B9C29B /* Likes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +58,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		F25826522AAFE74400D0A82F /* NewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewListView.swift; sourceTree = "<group>"; };
 		F25963652AA62D0700B3BF54 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F29079932AA82C15001FE862 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		F29079952AA84150001FE862 /* Users.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Users.swift; sourceTree = "<group>"; };
@@ -85,6 +85,8 @@
 		F2BABA0A2A9D6AF200C3794B /* LoadingLottie.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LoadingLottie.json; sourceTree = "<group>"; };
 		F2BABA4E2A9FC86200C3794B /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
 		F2D27AF22AB7E08500B9C29B /* Unis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unis.swift; sourceTree = "<group>"; };
+		F2D27AF42AC0568400B9C29B /* NListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NListView.swift; sourceTree = "<group>"; };
+		F2D27AF62AC2971400B9C29B /* Likes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Likes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,12 +148,13 @@
 				F2975FD32A98EC80004A763B /* track3App.swift */,
 				F2BAB9F32A98FA4F00C3794B /* DataManager.swift */,
 				F2BAB9F52A98FBCC00C3794B /* Post.swift */,
-				F25826522AAFE74400D0A82F /* NewListView.swift */,
+				F2D27AF62AC2971400B9C29B /* Likes.swift */,
 				F290799B2AA97D68001FE862 /* SignUpView.swift */,
 				F2D27AF22AB7E08500B9C29B /* Unis.swift */,
 				F29079952AA84150001FE862 /* Users.swift */,
 				F2975FD52A98EC80004A763B /* ContentView.swift */,
 				F29079992AA8FE96001FE862 /* LoginView.swift */,
+				F2D27AF42AC0568400B9C29B /* NListView.swift */,
 				F2BABA0A2A9D6AF200C3794B /* LoadingLottie.json */,
 				F2BABA082A9D6A0700C3794B /* LottieView.swift */,
 				F2BABA4E2A9FC86200C3794B /* SideMenu.swift */,
@@ -342,6 +345,8 @@
 			files = (
 				F2BABA4F2A9FC86200C3794B /* SideMenu.swift in Sources */,
 				F2D27AF32AB7E08500B9C29B /* Unis.swift in Sources */,
+				F2D27AF52AC0568500B9C29B /* NListView.swift in Sources */,
+				F2D27AF72AC2971500B9C29B /* Likes.swift in Sources */,
 				F290799C2AA97D68001FE862 /* SignUpView.swift in Sources */,
 				F2975FD62A98EC80004A763B /* ContentView.swift in Sources */,
 				F2BAB9FF2A9C068400C3794B /* MainView.swift in Sources */,
@@ -353,7 +358,6 @@
 				F2BAB9F02A98F8BC00C3794B /* ListView.swift in Sources */,
 				F29079962AA84150001FE862 /* Users.swift in Sources */,
 				F2BAB9F82A9BA34700C3794B /* BottomSheet.swift in Sources */,
-				F25826532AAFE74500D0A82F /* NewListView.swift in Sources */,
 				F2BABA092A9D6A0700C3794B /* LottieView.swift in Sources */,
 				F2BAB9F62A98FBCC00C3794B /* Post.swift in Sources */,
 			);
