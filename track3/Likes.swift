@@ -8,9 +8,9 @@
 import Foundation
 
 
-struct Likes: Identifiable, Codable {
+struct Likes: Codable, Identifiable {
 
-    var id: UUID
+    var id: UUID?
     var PostID: String
     var UserID: String
     

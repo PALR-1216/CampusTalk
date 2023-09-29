@@ -254,8 +254,7 @@ class DataManager: ObservableObject {
     }
 
     //TODO: select * likes and render it to the like page 
-    
-    func fetchLikes(userID:String) {
+    func fetchLikes(userID: String) {
         self.isLoading = true
         likes.removeAll()
         let db = Firestore.firestore()
@@ -263,18 +262,34 @@ class DataManager: ObservableObject {
         ref.whereField("UserID", isEqualTo: userID).getDocuments { snapshot, error in
             guard error == nil else {
                 print(error!.localizedDescription)
+                self.isLoading = false // Set isLoading to false in case of an error
                 return
             }
-            
+
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     let data = document.data()
-                    let userID = data["UserID"] ?? ""
-                    
+                    if let user = data["UserID"] as? String, let postID = data["PostID"] as? String {
+                        let likePost = Likes(PostID: postID, UserID: user)
+                        self.likes.append(likePost)
+                        // Append likePost to the likes array
+                        self.fetchLikePost(Likes: [likePost])
+                        
+                    }
                 }
             }
+
+            self.isLoading = false // Set isLoading to false after fetching likes
         }
     }
+    
+    func fetchLikePost(Likes: [Likes]) {
+        for like in Likes {
+//            print(like.PostID)
+        }
+        
+    }
+
     
     
     

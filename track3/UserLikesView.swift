@@ -6,20 +6,31 @@
 //
 
 import SwiftUI
+import Firebase
+
 
 struct UserLikesView: View {
+    @EnvironmentObject var dataManager:DataManager
     var body: some View {
         NavigationView{
-            ScrollView{
-                Text("hell oworld")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
+            VStack {
+                ScrollView{
+                    Text("hell oworld")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                }
+                
+                .navigationTitle("Likes")
             }
-            
-            .navigationTitle("Likes")
+           
         }
-        
+        .onAppear {
+            dataManager.fetchLikes(userID: Auth.auth().currentUser?.uid ?? ""  )
+            
+        }
     }
+    
+        
 }
 
 struct UserLikesView_Previews: PreviewProvider {
