@@ -16,7 +16,8 @@ struct NListView:View {
     @State var Likes: Int = 0
     @State var postID: String = ""
     @State var UserID: String = ""
-    @State var IsLiked: Bool = false 
+    @State var IsLiked: Bool = false
+    
     
     var body: some View{
         VStack {
@@ -68,11 +69,19 @@ struct NListView:View {
                     Button {
                         //
                         dataManager.LikePost(postId: postID, userID: UserID )
-                        
+                        let Generator = UIImpactFeedbackGenerator(style: .medium)
+                        Generator.impactOccurred()
                         
                     } label: {
-                        Label("\(Likes)", systemImage: "heart")
+                        
+//                        Label("\(Likes)", systemImage: "heart")
+                        Text("\(Likes)")
+                            .font(.title3)
+                        
+                        Image(systemName: IsLiked ? "heart.fill" : "heart")
                             .font(.title2)
+                            .foregroundColor(IsLiked ? .red : .black)
+                                    
                         
                     }
                     
@@ -90,10 +99,29 @@ struct NListView:View {
                 .padding(.leading,5)
                 
             }
+            
+            .onAppear {
+                DispatchQueue.global(qos: .background).async {
+                    dataManager.checkIfPostIsLikedInLikesCollection(postId: postID) { Liked in
+                        if (Liked) {
+//                            dataManager.isLiked = true
+                            IsLiked = true
+                        } else {
+//                            dataManager.isLiked = false
+                            IsLiked = false
+                        }
+                    }
+                }
+            }
         }
+       
         
-    }
+            
+        }
+
 }
+
+
 
 struct testView_Previews: PreviewProvider {
     static var previews: some View {

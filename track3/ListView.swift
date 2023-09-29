@@ -38,7 +38,7 @@ struct ListView: View {
                         .offset(x: 80, y: 200)
                 
                 if dataManager.isLoading {
-                    ProgressView("Loading")
+//                    ProgressView("Loading")
             
                     
                 }

@@ -11,7 +11,6 @@ import SwiftUI
 struct Unis: Hashable, Identifiable {
     var id: Int
     var UniName: String
-    
 }
 
 

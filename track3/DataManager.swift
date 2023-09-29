@@ -19,6 +19,7 @@ class DataManager: ObservableObject {
     @Published var posts: [Posts] = []
     @Published var users: [Users] = []
     @Published var unis: [Unis] = []
+    @Published var likes: [Likes] = []
     @Published var UsersUni = String()
 //    @Published var userID: String = ""
     @Published var isLoggedIn: Bool = false
@@ -26,6 +27,7 @@ class DataManager: ObservableObject {
 //    @State var userID: String = ""
     @Published var userName = String()
     @Published var isLoading = false
+//    @Published var LikedByUser: Bool?
     
     
     
@@ -113,7 +115,7 @@ class DataManager: ObservableObject {
                     
                  
                         // Create the Posts object with the converted timestamp
-                    let post = Posts(id: ID, postContent: content, university: university, timeStamp: Time, User: user, UserID: Auth.auth().currentUser?.uid ?? "", LikesCount:LikesCount)
+                    let post = Posts(id: ID, postContent: content, university: university, timeStamp: Time, User: user, UserID: Auth.auth().currentUser?.uid ?? "", LikesCount:LikesCount, isLiked: false)
                         self.posts.append(post)
                   
 //                    print(post)
@@ -166,12 +168,13 @@ class DataManager: ObservableObject {
     
 
 
-    func checkIfPostIsLiked(postId: String, completion: @escaping (Bool) -> Void) {
+
+    func checkIfPostIsLikedInLikesCollection(postId: String, completion: @escaping (Bool) -> Void) {
         guard let userId = Auth.auth().currentUser?.uid else { return }
 
         let db = Firestore.firestore()
-        let postRef = db.collection("posts").document(postId)
-        let userLikesRef = db.collection("users").document(userId).collection("likes")
+        let postRef = db.collection("Posts").document(postId)
+        let likesRef = db.collection("Likes")
 
         // Fetch the post
         postRef.getDocument { (postSnapshot, error) in
@@ -179,21 +182,22 @@ class DataManager: ObservableObject {
                 print("Error getting post: \(error)")
                 completion(false)
             } else if let postSnapshot = postSnapshot {
-                // Fetch the user's likes
-                userLikesRef.whereField("postId", isEqualTo: postId).getDocuments { (likeSnapshot, error) in
+                // Fetch the likes
+                likesRef.whereField("PostID", isEqualTo: postId).whereField("UserID", isEqualTo: userId).getDocuments { (likeSnapshot, error) in
                     if let error = error {
-                        print("Error getting likes: \(error)")
+                        print("Error getting likes:  \(error)")
                         completion(false)
+                        
                     } else if let likeSnapshot = likeSnapshot {
                         // Check if the post is in the user's likes
                         let isLiked = !likeSnapshot.isEmpty
+                        
                         completion(isLiked)
                     }
                 }
             }
         }
     }
-
     // Usage:
 //    checkIfPostIsLiked(postId: "somePostId") { (isLiked) in
 //        if isLiked {
@@ -249,6 +253,28 @@ class DataManager: ObservableObject {
         }
     }
 
+    //TODO: select * likes and render it to the like page 
+    
+    func fetchLikes(userID:String) {
+        self.isLoading = true
+        likes.removeAll()
+        let db = Firestore.firestore()
+        let ref = db.collection("Likes")
+        ref.whereField("UserID", isEqualTo: userID).getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let userID = data["UserID"] ?? ""
+                    
+                }
+            }
+        }
+    }
     
     
     
