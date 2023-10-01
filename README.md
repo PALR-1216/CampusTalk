@@ -9,4 +9,8 @@
  1.  **Anonymous Posting and Commenting :** One of the core features is the ability for users to post and comment anonymously. This anonymity can encourage open and honest discussions on sensitive topics.
  2.  **User Profiles:** Another core feature is the capability to create user profiles that provide anonymity while optionally allowing for personalized avatars or usernames, enhancing user recognition within the community. Furthermore, the app dynamically adapts its visual style based on the university selected by the user.
  3.  **System Like (Still in develompent):** Another core feature I implemented is a Like system is a core feature that enhances user engagement on our platform. Users can express their appreciation for posts and save them for future reference. Additionally, notifications inform users when their content receives likes, keeping them engaged and encouraging them to return.
+
+ # Some Images
+
  
+![Login View](https://github.com/PALR-1216/CampusTalk/assets/63958751/17cf65af-5dae-4084-94bf-709b048d7ebf)
