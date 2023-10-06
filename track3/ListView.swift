@@ -24,8 +24,8 @@ struct ListView: View {
     var body: some View {
         
         NavigationView {
-            ZStack{
-        //            Color.purple.opacity(0.58).ignoresSafeArea(.all)
+            ZStack{ 
+//                Color.purple.opacity(0.45).ignoresSafeArea(.all)
                     Circle()
                         .foregroundColor(.yellow.opacity(0.20))
                         .blur(radius: 8)
@@ -72,6 +72,7 @@ struct ListView: View {
                 
 //                isLoading = true
                 dataManager.fetchPost(UsersUni: dataManager.UsersUni)
+                
 
                
 //                DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // Simulated 2-second delay

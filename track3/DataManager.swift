@@ -12,7 +12,7 @@ import AuthenticationServices
 import GoogleSignIn
 import GoogleSignInSwift
 
-
+let LinkToRandomAvatar = "https://robohash.org/"
 
 
 class DataManager: ObservableObject {
@@ -20,6 +20,7 @@ class DataManager: ObservableObject {
     @Published var users: [Users] = []
     @Published var unis: [Unis] = []
     @Published var likes: [Likes] = []
+    @Published var likedPost: [LikedPost] = []
     @Published var UsersUni = String()
 //    @Published var userID: String = ""
     @Published var isLoggedIn: Bool = false
@@ -273,7 +274,7 @@ class DataManager: ObservableObject {
                         let likePost = Likes(PostID: postID, UserID: user)
                         self.likes.append(likePost)
                         // Append likePost to the likes array
-                        self.fetchLikePost(Likes: [likePost])
+                        self.fetchLikePost(postId: postID)
                         
                     }
                 }
@@ -283,13 +284,55 @@ class DataManager: ObservableObject {
         }
     }
     
-    func fetchLikePost(Likes: [Likes]) {
-        for like in Likes {
-//            print(like.PostID)
+    
+    
+    func fetchLikePost(postId:String) {
+//        for like in Likes {
+//
+//        }
+        likedPost.removeAll()
+        
+        let db = Firestore.firestore()
+        let ref = db.collection("Posts")
+        ref.whereField("ID", isEqualTo: postId).getDocuments { snapshot, error in
+            guard error == nil else {
+                print(error!.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot {
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let ID = data["ID"] as? String ?? ""
+                    let content = data["postContent"] as? String ?? ""
+                    let university = data["university"] as? String ?? ""
+                    let Time = data["timeStamp"] as? Timestamp ?? Timestamp()
+                    let user = data["User"] as? String ?? ""
+                    let LikesCount = data["LikesCount"] as? Int ?? 0
+                    //TODO: Add this to the like view area
+                    
+                    
+                    let post = LikedPost(id: ID, postContent: content, university: university, timeStamp: Time, User: user, UserID: Auth.auth().currentUser?.uid ?? "", LikesCount: LikesCount, isLiked: true)
+                    print(post)
+                    self.likedPost.append(post)
+                    
+                }
+                
+                self.likedPost.sort(by: { $0.timeStamp.dateValue() > $1.timeStamp.dateValue() })
+
+            }
         }
         
     }
 
+    func removeLike(postId:String) {
+        let db = Firestore.firestore()
+
+        let LikeRef = db.collection("Likes")
+        LikeRef.whereField("PostID", isEqualTo: postId).whereField("UserID", isEqualTo: Auth.auth().currentUser?.uid ?? "").getDocuments { SnapshotData, error in
+            
+        } 
+    }
     
     
     

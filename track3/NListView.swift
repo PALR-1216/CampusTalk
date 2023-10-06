@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct NListView:View {
     @EnvironmentObject var dataManager:DataManager
@@ -23,14 +24,23 @@ struct NListView:View {
         VStack {
             Divider()
             HStack {
-                Image("\(usersUni)")
+                
+                WebImage(url: URL(string: "https://robohash.org/\(userName)"))
+                    
                     .resizable()
-                    .scaledToFit()
-                    .clipShape(Circle())
-                    .frame(width: 60, height: 100)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 55, height: 100)
+                    .cornerRadius(60 / 2)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white, lineWidth: 4)
+                            .frame(width: 60, height: 100)
+                    )
+                    .shadow(radius: 10)
                     .padding(.leading, 5)
                 Text("@\(userName)")
                     .fontWeight(.bold)
+                    .padding(.leading, 2)
                 Spacer()
                 
                     Text(TimeAgo)

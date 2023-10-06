@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Firebase
+import SDWebImageSwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var dataManager:DataManager
@@ -15,6 +16,8 @@ struct ProfileView: View {
             VStack {
                 Text(dataManager.UsersUni)
                 Text(dataManager.userName)
+                WebImage(url: URL(string: "https://robohash.org/\(dataManager.userName)"))
+                    .resizable()
                 
                 
                 Button {
